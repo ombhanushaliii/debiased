@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Survey } from '@/types';
 import { Clock, Users, Coins, ArrowRight } from 'lucide-react';
 import Modal from './Modal';
+import AnimatedButton from './AnimatedButton';
 
 interface SurveyCardProps {
   survey: Survey;
@@ -124,14 +125,14 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
 
   return (
     <>
-      <div className="paper-card p-6 hover:shadow-paper-lg transition-shadow duration-300">
+      <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 hover:shadow-paper-lg transition-shadow duration-300">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-xl font-semibold text-ink-800 mb-2">{survey.title}</h3>
-            <p className="text-ink-600 mb-4 line-clamp-3">{survey.description}</p>
+            <h3 className="text-xl font-semibold text-white mb-2">{survey.title}</h3>
+            <p className="text-neutral-400 mb-4 line-clamp-3">{survey.description}</p>
           </div>
           <div className="ml-4 text-right">
-            <div className="flex items-center space-x-1 text-green-600 font-semibold">
+            <div className="flex items-center space-x-1 text-green-400 font-semibold">
               <Coins size={16} />
               <span>{survey.reward} {survey.currency}</span>
             </div>
@@ -139,7 +140,7 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
         </div>
 
         <div className="space-y-3 mb-4">
-          <div className="flex items-center justify-between text-sm text-ink-600">
+          <div className="flex items-center justify-between text-sm text-neutral-400">
             <div className="flex items-center space-x-4">
               <span className="flex items-center space-x-1">
                 <Users size={14} />
@@ -150,29 +151,31 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
                 <span>~5 min</span>
               </span>
             </div>
-            <span className="font-medium">{Math.round(progressPercentage)}% complete</span>
+            <span className="font-medium text-white">{Math.round(progressPercentage)}% complete</span>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-paper-300 rounded-full h-2">
+          <div className="w-full bg-neutral-700 rounded-full h-2">
             <div
-              className="bg-ink-600 h-2 rounded-full transition-all duration-300"
+              className="bg-purple-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(progressPercentage, 100)}%` }}
             />
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="text-sm text-ink-500">
+          <div className="text-sm text-neutral-500">
             Created by {survey.creator}
           </div>
-          <button
+          <AnimatedButton
             onClick={handleStartSurvey}
-            className="paper-button-primary flex items-center space-x-2"
+            className="text-sm"
           >
-            <span>Start Survey</span>
-            <ArrowRight size={16} />
-          </button>
+            <span className="flex items-center space-x-2">
+              <span>Start Survey</span>
+              <ArrowRight size={14} />
+            </span>
+          </AnimatedButton>
         </div>
       </div>
 
@@ -216,20 +219,18 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
 
           {/* Navigation */}
           <div className="flex justify-between pt-4">
-            <button
+            <AnimatedButton
               onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
               disabled={currentQuestionIndex === 0}
-              className="paper-button disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
-            </button>
-            <button
+            </AnimatedButton>
+            <AnimatedButton
               onClick={handleNext}
               disabled={!canProceed}
-              className="paper-button-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {currentQuestionIndex === survey.questions.length - 1 ? 'Complete' : 'Next'}
-            </button>
+            </AnimatedButton>
           </div>
         </div>
       </Modal>

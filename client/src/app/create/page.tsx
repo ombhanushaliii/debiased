@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import FormBuilder from '@/components/FormBuilder';
 import Modal from '@/components/Modal';
+import { BackgroundBeams } from '@/components/ui/background-beams';
 import { Question, Survey } from '@/types';
-import { Save, Eye, Rocket, AlertCircle, Download } from 'lucide-react';
+import { Save, Eye, Rocket, AlertCircle, Download, Coins, Users, Clock } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -36,80 +37,140 @@ export default function CreateSurveyPage() {
     
     setIsGeneratingPDF(true);
     try {
-      // Create a temporary container for PDF generation
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '0';
-      tempContainer.style.width = '800px';
-      tempContainer.style.backgroundColor = '#ffffff';
-      tempContainer.style.padding = '40px';
-      tempContainer.style.fontFamily = 'Arial, sans-serif';
-      tempContainer.style.color = '#000000';
-      
-      // Clone the survey content
-      const clonedContent = surveyRef.current.cloneNode(true) as HTMLElement;
-      
-      // Clean up the cloned content for PDF
-      const buttons = clonedContent.querySelectorAll('button');
-      buttons.forEach(btn => btn.remove());
-      
-      const inputs = clonedContent.querySelectorAll('input, textarea');
-      inputs.forEach(input => {
-        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
-          const value = input.value || input.placeholder || '';
-          const span = document.createElement('span');
-          span.textContent = value;
-          span.style.display = 'inline-block';
-          span.style.padding = '8px';
-          span.style.border = '1px solid #ccc';
-          span.style.borderRadius = '4px';
-          span.style.minHeight = '20px';
-          span.style.backgroundColor = '#f9f9f9';
-          input.parentNode?.replaceChild(span, input);
-        }
-      });
-      
-      // Remove interactive elements
-      const interactiveElements = clonedContent.querySelectorAll('[draggable], .cursor-move, .hover\\:shadow-paper-lg');
-      interactiveElements.forEach(el => {
-        el.removeAttribute('draggable');
-        el.classList.remove('cursor-move', 'hover:shadow-paper-lg');
-      });
-      
-      tempContainer.appendChild(clonedContent);
-      document.body.appendChild(tempContainer);
-      
-      const canvas = await html2canvas(tempContainer, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        width: 800,
-        height: tempContainer.scrollHeight
-      });
-      
-      // Clean up
-      document.body.removeChild(tempContainer);
-      
-      const imgData = canvas.toDataURL('image/png');
+      // Create a high-quality PDF using jsPDF directly
       const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
       
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      let yPosition = margin;
       
-      let position = 0;
+      // Add header with title
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(40, 40, 40);
+      const titleText = title.trim() || 'Survey Draft';
+      pdf.text(titleText, margin, yPosition);
+      yPosition += 15;
       
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      // Add description
+      if (description.trim()) {
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(80, 80, 80);
+        const descriptionLines = pdf.splitTextToSize(description, contentWidth);
+        pdf.text(descriptionLines, margin, yPosition);
+        yPosition += descriptionLines.length * 6 + 10;
+      }
       
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      // Add survey details
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(40, 40, 40);
+      pdf.text('Survey Details', margin, yPosition);
+      yPosition += 10;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(60, 60, 60);
+      pdf.text(`Expected Responses: ${expectedResponses}`, margin, yPosition);
+      yPosition += 6;
+      pdf.text(`Reward per Response: ${reward} ETH`, margin, yPosition);
+      yPosition += 6;
+      pdf.text(`Total Cost: ${(expectedResponses * reward).toFixed(4)} ETH`, margin, yPosition);
+      yPosition += 15;
+      
+      // Add questions
+      if (questions.length > 0) {
+        pdf.setFontSize(16);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(40, 40, 40);
+        pdf.text('Questions', margin, yPosition);
+        yPosition += 12;
+        
+        questions.forEach((question, index) => {
+          // Check if we need a new page
+          if (yPosition > pageHeight - 40) {
+            pdf.addPage();
+            yPosition = margin;
+          }
+          
+          // Question number and title
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          pdf.setTextColor(40, 40, 40);
+          pdf.text(`${index + 1}. ${question.title}${question.required ? ' *' : ''}`, margin, yPosition);
+          yPosition += 8;
+          
+          // Question description if exists
+          if (question.description) {
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'italic');
+            pdf.setTextColor(80, 80, 80);
+            const descLines = pdf.splitTextToSize(question.description, contentWidth);
+            pdf.text(descLines, margin, yPosition);
+            yPosition += descLines.length * 5 + 5;
+          }
+          
+          // Question type and options
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          pdf.setTextColor(60, 60, 60);
+          
+          switch (question.type) {
+            case 'text':
+              pdf.text('Type: Text Response', margin, yPosition);
+              yPosition += 6;
+              pdf.text('Answer: [Text input field]', margin, yPosition);
+              yPosition += 8;
+              break;
+              
+            case 'multiple-choice':
+              pdf.text('Type: Multiple Choice', margin, yPosition);
+              yPosition += 6;
+              if (question.options) {
+                question.options.forEach((option, optIndex) => {
+                  pdf.text(`  ${String.fromCharCode(97 + optIndex)}. ${option}`, margin, yPosition);
+                  yPosition += 5;
+                });
+              }
+              yPosition += 3;
+              break;
+              
+            case 'rating':
+              pdf.text('Type: Rating Scale', margin, yPosition);
+              yPosition += 6;
+              pdf.text(`Scale: ${question.minRating || 1} to ${question.maxRating || 5}`, margin, yPosition);
+              yPosition += 8;
+              break;
+              
+            case 'poll':
+              pdf.text('Type: Multiple Selection', margin, yPosition);
+              yPosition += 6;
+              if (question.options) {
+                question.options.forEach((option, optIndex) => {
+                  pdf.text(`  □ ${option}`, margin, yPosition);
+                  yPosition += 5;
+                });
+              }
+              yPosition += 3;
+              break;
+          }
+          
+          yPosition += 8;
+        });
+      }
+      
+      // Add footer
+      const totalPages = pdf.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(8);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(120, 120, 120);
+        pdf.text(`Generated on ${new Date().toLocaleDateString()}`, margin, pageHeight - 10);
+        pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 10);
       }
       
       const fileName = title.trim() ? `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_survey.pdf` : 'survey_draft.pdf';
@@ -200,75 +261,135 @@ export default function CreateSurveyPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-paper-100">
-      <Navbar />
+  const renderActualSurveyView = () => {
+    return (
+      <div className="max-w-2xl mx-auto bg-paper-50 rounded-xl shadow-paper-lg p-8">
+        {/* Survey Header */}
+        <div className="text-center mb-8 pb-6 border-b border-paper-200">
+          <h1 className="text-3xl font-bold text-ink-800 mb-4">{title || 'Survey Title'}</h1>
+          <p className="text-lg text-ink-600 mb-4">{description || 'Survey description will appear here.'}</p>
+          <div className="flex items-center justify-center space-x-6 text-sm text-ink-500">
+            <span className="flex items-center space-x-1">
+              <Coins size={16} />
+              <span>{reward} ETH reward</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <Users size={16} />
+              <span>{expectedResponses} responses needed</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <Clock size={16} />
+              <span>~{questions.length * 2} min</span>
+            </span>
+          </div>
+        </div>
 
-      <div ref={surveyRef} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Questions */}
+        <div className="space-y-8">
+          {questions.map((question, index) => (
+            <div key={question.id} className="space-y-4">
+              <div>
+                <h3 className="text-xl font-semibold text-ink-800 mb-2">
+                  {index + 1}. {question.title}
+                  {question.required && <span className="text-red-500 ml-1">*</span>}
+                </h3>
+                {question.description && (
+                  <p className="text-ink-600 mb-4">{question.description}</p>
+                )}
+              </div>
+
+              <div className="bg-paper-100 rounded-lg p-4">
+                {renderPreviewQuestion(question)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Survey Footer */}
+        <div className="mt-8 pt-6 border-t border-paper-200 text-center">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <p className="text-green-800 font-medium">
+              Complete this survey to earn {reward} ETH
+            </p>
+          </div>
+          <p className="text-sm text-ink-500">
+            Your responses are completely anonymous and protected by zero-knowledge proofs
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-950 relative">
+      <Navbar />
+      <BackgroundBeams />
+
+      <div ref={surveyRef} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-ink-800 mb-2">Create Survey</h1>
-          <p className="text-xl text-ink-600">Build an engaging survey with our intuitive form builder</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Create Survey</h1>
+          <p className="text-xl text-neutral-400">Build an engaging survey with our intuitive form builder</p>
         </div>
 
         {/* Survey Settings */}
-        <div className="paper-card p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-ink-800 mb-6">Survey Details</h2>
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-white mb-6">Survey Details</h2>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-ink-700 mb-2">Survey Title *</label>
+              <label className="block text-sm font-medium text-neutral-300 mb-2">Survey Title *</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter a compelling survey title..."
-                className="w-full paper-input text-lg"
+                className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 text-lg focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-ink-700 mb-2">Description *</label>
+              <label className="block text-sm font-medium text-neutral-300 mb-2">Description *</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe your survey's purpose and what participants can expect..."
-                className="w-full paper-input h-32 resize-none"
+                className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 h-32 resize-none focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500"
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-ink-700 mb-2">Expected Responses *</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-2">Expected Responses *</label>
                 <input
                   type="number"
                   min="1"
                   value={expectedResponses}
                   onChange={(e) => setExpectedResponses(parseInt(e.target.value) || 0)}
-                  className="w-full paper-input"
+                  className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 transition-colors duration-200"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-ink-700 mb-2">Reward per Response (ETH) *</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-2">Reward per Response (ETH) *</label>
                 <input
                   type="number"
                   min="0"
                   step="0.1"
                   value={reward}
                   onChange={(e) => setReward(parseFloat(e.target.value) || 0)}
-                  className="w-full paper-input"
+                  className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 transition-colors duration-200"
                 />
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-paper p-4">
+            <div className="bg-blue-900 border border-blue-700 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <AlertCircle className="text-blue-600 flex-shrink-0 mt-0.5" size={18} />
-                <div className="text-blue-800">
+                <AlertCircle className="text-blue-400 flex-shrink-0 mt-0.5" size={18} />
+                <div className="text-blue-200">
                   <p className="font-medium mb-1">Total Cost Estimate</p>
                   <p className="text-sm">
-                    {expectedResponses} responses × {reward} ETH = <strong>{(expectedResponses * reward).toFixed(2)} ETH</strong>
+                    {expectedResponses} responses × {reward} ETH = <strong>{(expectedResponses * reward).toFixed(4)} ETH</strong>
                   </p>
                 </div>
               </div>
@@ -278,13 +399,13 @@ export default function CreateSurveyPage() {
 
         {/* Form Builder */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-ink-800 mb-6">Survey Questions</h2>
+          <h2 className="text-2xl font-semibold text-white mb-6">Survey Questions</h2>
           <FormBuilder questions={questions} onQuestionsChange={setQuestions} />
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <div className="text-sm text-ink-600">
+          <div className="text-sm text-neutral-400">
             {questions.length} question{questions.length !== 1 ? 's' : ''} added
           </div>
 
@@ -331,65 +452,11 @@ export default function CreateSurveyPage() {
       <Modal
         isOpen={showPreviewModal}
         onClose={() => setShowPreviewModal(false)}
-        title="Survey Preview"
-        size="lg"
+        title="Survey Preview - How Users Will See It"
+        size="2xl"
       >
-        <div className="space-y-6">
-          <div className="border-b border-paper-200 pb-4">
-            <h3 className="text-xl font-semibold text-ink-800">{title}</h3>
-            <p className="text-ink-600 mt-2">{description}</p>
-            <div className="flex items-center space-x-4 mt-3 text-sm text-ink-500">
-              <span>Reward: {reward} ETH</span>
-              <span>Expected: {expectedResponses} responses</span>
-            </div>
-          </div>
-
-          {questions.length > 0 && (
-            <>
-              <div className="flex items-center justify-between text-sm text-ink-600">
-                <span>Question {currentPreviewIndex + 1} of {questions.length}</span>
-                <span>{Math.round(((currentPreviewIndex + 1) / questions.length) * 100)}% complete</span>
-              </div>
-
-              <div className="w-full bg-paper-300 rounded-full h-2">
-                <div
-                  className="bg-ink-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentPreviewIndex + 1) / questions.length) * 100}%` }}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-lg font-semibold text-ink-800 mb-2">
-                    {questions[currentPreviewIndex].title}
-                    {questions[currentPreviewIndex].required && <span className="text-red-500 ml-1">*</span>}
-                  </h4>
-                  {questions[currentPreviewIndex].description && (
-                    <p className="text-ink-600 mb-4">{questions[currentPreviewIndex].description}</p>
-                  )}
-                </div>
-
-                {renderPreviewQuestion(questions[currentPreviewIndex])}
-              </div>
-
-              <div className="flex justify-between pt-4">
-                <button
-                  onClick={() => setCurrentPreviewIndex(prev => Math.max(0, prev - 1))}
-                  disabled={currentPreviewIndex === 0}
-                  className="paper-button disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => setCurrentPreviewIndex(prev => Math.min(questions.length - 1, prev + 1))}
-                  disabled={currentPreviewIndex === questions.length - 1}
-                  className="paper-button-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          )}
+        <div className="max-h-[80vh] overflow-y-auto">
+          {renderActualSurveyView()}
         </div>
       </Modal>
 
