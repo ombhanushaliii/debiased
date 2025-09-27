@@ -114,7 +114,7 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
 
   const InlineQuestionAdder = ({ index }: { index?: number }) => (
     <div className="flex items-center justify-center py-2">
-      <div className="flex-1 h-px bg-paper-300"></div>
+      <div className="flex-1 h-px bg-neutral-700"></div>
       <div className="flex items-center space-x-2 mx-4">
         {questionTypes.map((type) => {
           const IconComponent = type.icon;
@@ -122,7 +122,7 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
             <button
               key={type.type}
               onClick={() => addQuestionAtPosition(type.type, index)}
-              className="flex items-center space-x-1 px-3 py-1.5 bg-paper-100 hover:bg-paper-200 border border-paper-300 hover:border-paper-400 rounded-full text-ink-600 hover:text-ink-800 transition-all duration-200 text-sm"
+              className="flex items-center space-x-1 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-neutral-600 hover:border-neutral-500 rounded-full text-neutral-300 hover:text-white transition-all duration-200 text-sm"
               title={type.description}
             >
               <IconComponent size={14} />
@@ -131,7 +131,7 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
           );
         })}
       </div>
-      <div className="flex-1 h-px bg-paper-300"></div>
+      <div className="flex-1 h-px bg-neutral-700"></div>
     </div>
   );
 
@@ -139,8 +139,8 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
     <div className="space-y-6">
       {/* Question Types Toolbar - Only show when no questions */}
       {questions.length === 0 && (
-        <div className="paper-card p-6">
-          <h3 className="text-lg font-semibold text-ink-800 mb-4">Add Question Types</h3>
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Add Question Types</h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {questionTypes.map((type) => {
               const IconComponent = type.icon;
@@ -148,13 +148,13 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                 <button
                   key={type.type}
                   onClick={() => addQuestion(type.type)}
-                  className="paper-button p-4 text-left hover:shadow-paper transition-all duration-200"
+                  className="bg-neutral-700 hover:bg-neutral-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 p-4 text-left hover:shadow-paper transition-all duration-200"
                 >
                   <div className="flex items-center space-x-3 mb-2">
-                    <IconComponent size={20} className="text-ink-600" />
-                    <span className="font-medium text-ink-800">{type.label}</span>
+                    <IconComponent size={20} className="text-neutral-300" />
+                    <span className="font-medium text-white">{type.label}</span>
                   </div>
-                  <p className="text-sm text-ink-600">{type.description}</p>
+                  <p className="text-sm text-neutral-400">{type.description}</p>
                 </button>
               );
             })}
@@ -165,12 +165,12 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
       {/* Questions List */}
       <div className="space-y-4">
         {questions.length === 0 ? (
-          <div className="paper-card p-12 text-center">
-            <div className="w-16 h-16 bg-paper-300 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Plus className="text-ink-400" size={32} />
+          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-12 text-center">
+            <div className="w-16 h-16 bg-neutral-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Plus className="text-neutral-400" size={32} />
             </div>
-            <h3 className="text-xl font-semibold text-ink-800 mb-2">No questions yet</h3>
-            <p className="text-ink-600">Start building your survey by adding questions above</p>
+            <h3 className="text-xl font-semibold text-white mb-2">No questions yet</h3>
+            <p className="text-neutral-400">Start building your survey by adding questions above</p>
           </div>
         ) : (
           <>
@@ -188,23 +188,23 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
-                  className={`paper-card p-6 cursor-move hover:shadow-paper-lg transition-shadow duration-200 ${
+                  className={`bg-neutral-800 border border-neutral-700 rounded-xl p-6 cursor-move hover:shadow-paper-lg transition-shadow duration-200 ${
                     draggedItem === index ? 'opacity-50' : ''
                   }`}
                 >
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0 mt-2">
-                  <GripVertical className="text-ink-400" size={20} />
+                  <GripVertical className="text-neutral-400" size={20} />
                 </div>
 
                 <div className="flex-1 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-ink-600 bg-paper-200 px-2 py-1 rounded">
+                    <span className="text-sm font-medium text-neutral-300 bg-neutral-700 px-2 py-1 rounded">
                       Question {index + 1} - {question.type.replace('-', ' ')}
                     </span>
                     <button
                       onClick={() => deleteQuestion(index)}
-                      className="text-red-500 hover:text-red-700 p-1"
+                      className="text-red-400 hover:text-red-300 p-1"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -217,7 +217,7 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                       placeholder="Enter your question..."
                       value={question.title}
                       onChange={(e) => updateQuestion(index, { title: e.target.value })}
-                      className="w-full paper-input text-lg font-medium"
+                      className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 text-lg font-medium focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500"
                     />
                   </div>
 
@@ -227,15 +227,15 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                       placeholder="Add description (optional)"
                       value={question.description || ''}
                       onChange={(e) => updateQuestion(index, { description: e.target.value })}
-                      className="w-full paper-input h-20 resize-none"
+                      className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 h-20 resize-none focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500"
                     />
                   </div>
 
                   {/* Question-specific settings */}
                   {(question.type === 'multiple-choice' || question.type === 'poll') && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-ink-700">
-                        Options <span className="text-red-500">*</span>:
+                      <label className="text-sm font-medium text-neutral-300">
+                        Options <span className="text-red-400">*</span>:
                       </label>
                       {question.options?.map((option, optionIndex) => {
                         const isEmpty = option.trim() === '';
@@ -245,14 +245,14 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                               type="text"
                               value={option}
                               onChange={(e) => updateOption(index, optionIndex, e.target.value)}
-                              className={`flex-1 paper-input ${isEmpty ? 'border-red-300 focus:border-red-500' : ''}`}
+                              className={`flex-1 bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500 ${isEmpty ? 'border-red-400 focus:border-red-500' : ''}`}
                               placeholder={`Enter option ${optionIndex + 1}...`}
                               required
                             />
                             {question.options && question.options.length > 1 && (
                               <button
                                 onClick={() => deleteOption(index, optionIndex)}
-                                className="text-red-500 hover:text-red-700 p-1"
+                                className="text-red-400 hover:text-red-300 p-1"
                                 title="Remove option"
                               >
                                 <Trash2 size={16} />
@@ -263,13 +263,13 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                       })}
                       <button
                         onClick={() => addOption(index)}
-                        className="paper-button text-sm flex items-center space-x-1"
+                        className="bg-neutral-700 hover:bg-neutral-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center space-x-1"
                       >
                         <Plus size={16} />
                         <span>Add Option</span>
                       </button>
                       {question.options?.some(opt => opt.trim() === '') && (
-                        <p className="text-sm text-red-600 flex items-center space-x-1">
+                        <p className="text-sm text-red-400 flex items-center space-x-1">
                           <X size={14} />
                           <span>All options must be filled</span>
                         </p>
@@ -280,25 +280,25 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                   {question.type === 'rating' && (
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-ink-700 block mb-1">Min Rating:</label>
+                        <label className="text-sm font-medium text-neutral-300 block mb-1">Min Rating:</label>
                         <input
                           type="number"
                           min="1"
                           max="10"
                           value={question.minRating || 1}
                           onChange={(e) => updateQuestion(index, { minRating: parseInt(e.target.value) })}
-                          className="paper-input w-full"
+                          className="bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:border-purple-500 transition-colors duration-200"
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-ink-700 block mb-1">Max Rating:</label>
+                        <label className="text-sm font-medium text-neutral-300 block mb-1">Max Rating:</label>
                         <input
                           type="number"
                           min="1"
                           max="10"
                           value={question.maxRating || 5}
                           onChange={(e) => updateQuestion(index, { maxRating: parseInt(e.target.value) })}
-                          className="paper-input w-full"
+                          className="bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:border-purple-500 transition-colors duration-200"
                         />
                       </div>
                     </div>
@@ -311,9 +311,9 @@ export default function FormBuilder({ questions, onQuestionsChange }: FormBuilde
                       id={`required-${question.id}`}
                       checked={question.required}
                       onChange={(e) => updateQuestion(index, { required: e.target.checked })}
-                      className="w-4 h-4 text-ink-600"
+                      className="w-4 h-4 text-purple-600 bg-neutral-900 border-neutral-700 rounded focus:ring-purple-500"
                     />
-                    <label htmlFor={`required-${question.id}`} className="text-sm text-ink-700">
+                    <label htmlFor={`required-${question.id}`} className="text-sm text-neutral-300">
                       Required question
                     </label>
                   </div>
