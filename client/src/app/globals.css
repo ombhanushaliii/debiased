@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    @apply bg-paper-100 text-ink-800 font-sans;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-opacity='0.02'%3E%3Cpolygon fill='%23000' points='36 34 26 24 16 34'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .paper-card {
+    @apply bg-paper-50 border border-paper-200 rounded-paper shadow-paper;
+  }
+
+  .paper-button {
+    @apply bg-paper-200 hover:bg-paper-300 text-ink-700 font-medium py-2 px-4 rounded-paper transition-colors duration-200;
+  }
+
+  .paper-button-primary {
+    @apply bg-ink-600 hover:bg-ink-700 text-paper-50 font-medium py-3 px-6 rounded-paper transition-colors duration-200 shadow-paper;
+  }
+
+  .paper-input {
+    @apply bg-paper-50 border border-paper-300 text-ink-700 rounded-paper px-4 py-2 focus:outline-none focus:border-ink-400 transition-colors duration-200;
+  }
+
+  .paper-modal {
+    @apply fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50;
+  }
+
+  .paper-modal-content {
+    @apply bg-paper-50 rounded-paper-lg shadow-paper-xl max-w-md w-full mx-4 p-6;
+  }
+}
