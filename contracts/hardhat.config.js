@@ -1,13 +1,27 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@kadena/hardhat-chainweb"); // Add this line
 require("dotenv").config();
 
 module.exports = {
   solidity: {
-    version: "0.8.28", //version
+    version: "0.8.28",
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
+      },
+    },
+  },
+  
+  chainweb: {
+    kadenaTestnet: {
+      type: 'external',
+      chains: 1, // Deploy to only 1 chain
+      externalHostUrl: "https://evm-testnet.chainweb.com/chainweb/0.0/evm-testnet/chain/20/evm",
+      etherscan: {
+        apiKey: 'noapikeyrequired',
+        apiURLTemplate: 'https://evm-testnet.chainweb.com/chainweb/0.0/evm-testnet/chain/{cid}/evm/api/',
+        browserURLTemplate: 'https://evm-testnet.chainweb.com/chainweb/0.0/evm-testnet/chain/{cid}/evm/',
       },
     },
   },
@@ -26,7 +40,7 @@ module.exports = {
   },
 
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: "noapikeyrequired"
   },
 
   verify: {
@@ -35,11 +49,7 @@ module.exports = {
     },
   },
 
-
   sourcify: {
-    // Disabled by default
-    // Doesn't need an API key
     enabled: true
   }
-
 };

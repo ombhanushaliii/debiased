@@ -25,6 +25,7 @@
     "typechain": "^8.3.2"
   },
   "dependencies": {
+    "@kadena/hardhat-chainweb": "^1.5.1",
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@openzeppelin/contracts": "^5.4.0",
     "@selfxyz/contracts": "^1.2.3"
