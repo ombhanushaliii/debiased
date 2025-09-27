@@ -1,18 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Wallet, Menu, X } from 'lucide-react';
 import Modal from './Modal';
+import { useWallet } from '@/components/WalletContext'; // Adjust the path
 
 export default function Navbar() {
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
+  const { isConnected, account, balance, connectWallet } = useWallet();
+  const [isWalletModalOpen, setIsWalletModalOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const handleConnectWallet = () => {
-    setIsConnected(true);
     setIsWalletModalOpen(false);
+    connectWallet();
   };
 
   return (
@@ -44,10 +45,12 @@ export default function Navbar() {
               {isConnected ? (
                 <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-2 rounded-paper">
                   <Wallet size={16} />
-                  <span className="text-sm">0x1234...5678</span>
+                  <span className="text-sm">{`${account.slice(0, 6)}...${account.slice(-4)}`}</span>
+                  {balance && <span className="text-sm ml-2">{balance} ETH</span>}
                 </div>
               ) : (
                 <button
+                  id="connect-button"
                   onClick={() => setIsWalletModalOpen(true)}
                   className="paper-button-primary flex items-center space-x-2"
                 >
@@ -88,10 +91,12 @@ export default function Navbar() {
                 {isConnected ? (
                   <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-2 rounded-paper w-fit">
                     <Wallet size={16} />
-                    <span className="text-sm">0x1234...5678</span>
+                    <span className="text-sm">{`${account.slice(0, 6)}...${account.slice(-4)}`}</span>
+                    {balance && <span className="text-sm ml-2">{balance} ETH</span>}
                   </div>
                 ) : (
                   <button
+                    id="connect-button"
                     onClick={() => setIsWalletModalOpen(true)}
                     className="paper-button-primary flex items-center space-x-2 w-fit"
                   >
