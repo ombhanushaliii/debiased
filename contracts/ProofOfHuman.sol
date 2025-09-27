@@ -11,7 +11,7 @@ import {CountryCodes} from "@selfxyz/contracts/contracts/libraries/CountryCode.s
 /**
  * @title ProofOfHuman - Aadhaar Verification Contract
  * @notice Implementation of Self Protocol verification system with special focus on Aadhaar
- * @dev Extends SelfVerificationRoot for onchain verification on Hedera Testnet
+ * @dev Extends SelfVerificationRoot for onchain verification on Celo Sepolia Testnet
  */
 
 contract ProofOfHuman is SelfVerificationRoot {
@@ -109,7 +109,7 @@ contract ProofOfHuman is SelfVerificationRoot {
         bytes memory userData
     ) internal override {
         // Decode userData
-        address user = abi.decode(userData, (address));
+        address user = address(uint160(output.userIdentifier));
         
         // Mark user as verified
         verifiedUsers[user] = true;
