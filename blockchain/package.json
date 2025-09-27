@@ -1,11 +1,11 @@
 {
-  "name": "self",
+  "name": "test",
   "version": "1.0.0",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy:sepolia": "hardhat run scripts/deploy.js --network celoSepolia",
-    "deploy:kadena": "hardhat run scripts/deploy.js --network "
+    "deploy:sepolia": "hardhat run scripts/selfDeploy.js --network celoSepolia",
+    "deploy:kadena": "hardhat run scripts/deploy.js --network kadenaTestnet "
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
@@ -13,20 +13,19 @@
     "@nomicfoundation/hardhat-ignition": "^0.15.13",
     "@nomicfoundation/hardhat-ignition-ethers": "^0.15.14",
     "@nomicfoundation/hardhat-network-helpers": "^1.1.0",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@nomicfoundation/hardhat-verify": "^2.1.1",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "chai": "^4.5.0",
-    "dotenv": "^17.2.2",
     "ethers": "^6.15.0",
-    "hardhat": "^2.26.0",
+    "hardhat": "^2.26.3",
     "hardhat-gas-reporter": "^2.3.0",
     "solidity-coverage": "^0.8.16",
     "typechain": "^8.3.2"
   },
   "dependencies": {
     "@kadena/hardhat-chainweb": "^1.5.1",
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@openzeppelin/contracts": "^5.4.0",
     "@selfxyz/contracts": "^1.2.3"
   }

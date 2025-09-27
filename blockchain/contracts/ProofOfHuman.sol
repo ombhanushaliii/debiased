@@ -23,7 +23,7 @@ contract ProofOfHuman is SelfVerificationRoot {
         uint256 minimumAge,
         string nationality
     );
-    
+
     event VerificationFailed(
         address indexed user,
         uint256 indexed timestamp,
@@ -33,19 +33,19 @@ contract ProofOfHuman is SelfVerificationRoot {
     // Storage
     SelfStructs.VerificationConfigV2 public verificationConfig;
     bytes32 public verificationConfigId;
-    
+
     // Mapping to track verified users
     mapping(address => bool) public verifiedUsers;
     mapping(address => uint256) public verificationTimestamps;
     mapping(address => string) public userNationalities;
-    
+
     // Statistics
     uint256 public totalVerifications;
     uint256 public aadhaarVerifications;
-    
+
     // Owner
     address private _owner;
-    
+
     /**
      * @notice Constructor for ProofOfHuman contract
      * @param identityVerificationHubV2Address The address of the Identity Verification Hub V2
@@ -59,44 +59,43 @@ contract ProofOfHuman is SelfVerificationRoot {
         _owner = msg.sender;
         _setupVerificationConfig(identityVerificationHubV2Address);
     }
-    
+
     /**
      * @notice Setup verification configuration with Aadhaar-optimized settings
      * @param hubAddress Address of the verification hub
      */
 
     function _setupVerificationConfig(address hubAddress) private {
-        
         string[] memory forbiddenCountries = new string[](3);
         forbiddenCountries[0] = CountryCodes.IRAN;
         forbiddenCountries[1] = CountryCodes.NORTH_KOREA;
         forbiddenCountries[2] = CountryCodes.RUSSIA;
-        
-        SelfUtils.UnformattedVerificationConfigV2 memory rawConfig = 
-            SelfUtils.UnformattedVerificationConfigV2({
+
+        SelfUtils.UnformattedVerificationConfigV2 memory rawConfig = SelfUtils
+            .UnformattedVerificationConfigV2({
                 olderThan: 18, // Minimum age
                 forbiddenCountries: forbiddenCountries,
                 ofacEnabled: false // OFAC compliance
             });
-        
+
         verificationConfig = SelfUtils.formatVerificationConfigV2(rawConfig);
         verificationConfigId = IIdentityVerificationHubV2(hubAddress)
             .setVerificationConfigV2(verificationConfig);
     }
-    
+
     /**
      * @notice Returns the verification config ID for this contract
      * @dev Required override from SelfVerificationRoot
      */
 
     function getConfigId(
-        bytes32, /* destinationChainId */
-        bytes32, /* userIdentifier */
+        bytes32 /* destinationChainId */,
+        bytes32 /* userIdentifier */,
         bytes memory /* userDefinedData */
     ) public view override returns (bytes32) {
         return verificationConfigId;
     }
-    
+
     /**
      * @notice Custom verification hook called after successful verification
      * @dev Required override from SelfVerificationRoot
@@ -110,25 +109,27 @@ contract ProofOfHuman is SelfVerificationRoot {
     ) internal override {
         // Decode userData
         address user = address(uint160(output.userIdentifier));
-        
+
         // Mark user as verified
         verifiedUsers[user] = true;
         verificationTimestamps[user] = block.timestamp;
-        
+
         // Store nationality if disclosed
         if (bytes(output.nationality).length > 0) {
             userNationalities[user] = output.nationality;
         }
-        
+
         // Update statistics
         totalVerifications++;
-        
+
         // Check if this is an Aadhaar verification (India nationality)
-        if (keccak256(abi.encodePacked(output.nationality)) == 
-            keccak256(abi.encodePacked("IND"))) {
+        if (
+            keccak256(abi.encodePacked(output.nationality)) ==
+            keccak256(abi.encodePacked("IND"))
+        ) {
             aadhaarVerifications++;
         }
-        
+
         // Emit verification event
         emit UserVerified(
             user,
@@ -138,32 +139,32 @@ contract ProofOfHuman is SelfVerificationRoot {
             output.nationality
         );
     }
-    
+
     /**
      * @notice Get document type string from attestation ID
      * @param attestationId The attestation ID from verification
      * @return Document type as string
      */
 
-
-    function _getDocumentType(uint256 attestationId) private pure returns (string memory) {
+    function _getDocumentType(
+        uint256 attestationId
+    ) private pure returns (string memory) {
         if (attestationId == 1) return "E_PASSPORT";
         if (attestationId == 2) return "EU_ID_CARD";
         if (attestationId == 3) return "AADHAAR";
         return "UNKNOWN";
     }
-    
+
     /**
      * @notice Check if a user is verified
      * @param user Address to check
      * @return Whether the user is verified
      */
 
-
     function isUserVerified(address user) external view returns (bool) {
         return verifiedUsers[user];
     }
-    
+
     /**
      * @notice Get verification details for a user
      * @param user Address to check
@@ -172,10 +173,12 @@ contract ProofOfHuman is SelfVerificationRoot {
      * @return nationality User's nationality
      */
 
-    function getUserVerificationDetails(address user) 
-        external 
-        view 
-        returns (bool isVerified, uint256 timestamp, string memory nationality) 
+    function getUserVerificationDetails(
+        address user
+    )
+        external
+        view
+        returns (bool isVerified, uint256 timestamp, string memory nationality)
     {
         return (
             verifiedUsers[user],
@@ -183,28 +186,25 @@ contract ProofOfHuman is SelfVerificationRoot {
             userNationalities[user]
         );
     }
-    
+
     /**
      * @notice Get verification statistics
      * @return total Total number of verifications
      * @return aadhaar Number of Aadhaar verifications
      */
 
-    function getVerificationStats() 
-        external 
-        view 
-        returns (uint256 total, uint256 aadhaar) 
+    function getVerificationStats()
+        external
+        view
+        returns (uint256 total, uint256 aadhaar)
     {
         return (totalVerifications, aadhaarVerifications);
     }
-    
-    
-    
+
     /**
      * @notice Get the owner of the contract
      */
     function owner() public view returns (address) {
         return _owner;
     }
-    
 }
