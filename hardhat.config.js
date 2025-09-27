@@ -16,7 +16,12 @@ module.exports = {
     celoSepolia: {
       url: "https://rpc.ankr.com/celo_sepolia",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 11142220,
+      chainId: 11142220
+    },
+    kadenaTestnet: {
+      url: "https://evm-testnet.chainweb.com/chainweb/0.0/evm-testnet/chain/20/evm/rpc",
+      chainId: parseInt(5920),
+      accounts: [process.env.PRIVATE_KEY]
     }
   },
 
