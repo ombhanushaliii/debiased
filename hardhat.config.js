@@ -2,11 +2,39 @@ require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
 module.exports = {
-  solidity: "0.8.20",
+  solidity: {
+    version: "0.8.28", //version
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
+  
   networks: {
-    hederaTestnet: {
-      url: "https://testnet.hashio.io/api",
-      accounts: [process.env.PVT_KEY] 
+    celoSepolia: {
+      url: "https://rpc.ankr.com/celo_sepolia",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 11142220,
     }
+  },
+
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY
+  },
+
+  verify: {
+    blockscout: {
+      enabled: false,
+    },
+  },
+
+
+  sourcify: {
+    // Disabled by default
+    // Doesn't need an API key
+    enabled: true
   }
+
 };
