@@ -4,9 +4,10 @@ require("dotenv").config();
 module.exports = {
   solidity: "0.8.20",
   networks: {
-    hederaTestnet: {
-      url: "https://testnet.hashio.io/api",
-      accounts: [process.env.PVT_KEY] 
+    kadenaTestnet: {
+      url: "https://evm-testnet.chainweb.com/chainweb/0.0/evm-testnet/chain/20/evm/rpc",
+      chainId: parseInt(5920),
+      accounts: [process.env.PRIVATE_KEY]
     }
   }
 };
