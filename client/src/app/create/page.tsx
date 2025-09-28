@@ -403,7 +403,7 @@ export default function CreateSurveyPage() {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={!account || !isVerified ? "Please verify your identity first..." : "Describe your survey's purpose and what participants can expect..."}
+                placeholder={!account || !isVerified ? "Please verify your identity first..." : "Describe your surveys purpose and what participants can expect..."}
                 disabled={!account || !isVerified}
                 className="w-full bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 h-32 resize-none focus:outline-none focus:border-purple-500 transition-colors duration-200 placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-50"
               />

@@ -19,7 +19,7 @@ export default function NotFound() {
 
           <h1 className="text-2xl font-bold text-ink-800 mb-4">Page Not Found</h1>
           <p className="text-ink-600 mb-8 leading-relaxed">
-            Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or you entered the wrong URL.
+            Sorry, we could not find the page you are looking for. It might have been moved, deleted, or you entered the wrong URL.
           </p>
 
           <div className="space-y-3">

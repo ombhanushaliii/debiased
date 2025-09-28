@@ -22,7 +22,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white relative">
+    <div className="min-h-screen bg-neutral-950 relative">
       <Navbar />
 
       {/* Hero Section with Background Beams */}
