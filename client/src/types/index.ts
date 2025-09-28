@@ -10,6 +10,7 @@ export interface Survey {
   createdAt: Date;
   status: 'draft' | 'active' | 'completed';
   questions: Question[];
+  cid?: string; // IPFS Content Identifier for accessing the full survey
 }
 
 export interface Question {

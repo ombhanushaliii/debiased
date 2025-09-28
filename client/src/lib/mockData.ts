@@ -12,6 +12,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-15'),
     status: 'active',
+    cid: 'QmYwAPJzv5CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFH',
     questions: [
       {
         id: 'q1',
@@ -48,6 +49,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-10'),
     status: 'active',
+    cid: 'QmXyzbKaTv9CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFJ',
     questions: [
       {
         id: 'q1',
@@ -83,6 +85,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-08'),
     status: 'active',
+    cid: 'QmZabCdEfg5CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFK',
     questions: [
       {
         id: 'q1',
@@ -119,6 +122,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-12'),
     status: 'active',
+    cid: 'QmHijKlMno5CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFL',
     questions: [
       {
         id: 'q1',
@@ -154,6 +158,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-14'),
     status: 'active',
+    cid: 'QmPqrStuVw5CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFM',
     questions: [
       {
         id: 'q1',
@@ -189,6 +194,7 @@ export const mockSurveys: Survey[] = [
     currency: 'ETH',
     createdAt: new Date('2024-01-05'),
     status: 'active',
+    cid: 'QmXyzAbcDe5CZsnAzt8auVNdGZPbsVtefGsF4eaGvwBHGFN',
     questions: [
       {
         id: 'q1',

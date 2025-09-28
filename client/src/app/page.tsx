@@ -6,23 +6,10 @@ import Navbar from '@/components/Navbar';
 import AnimatedButton from '@/components/AnimatedButton';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 import { Search, Shield, Users, Coins, ArrowRight, CheckCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation'
-import Verify from '@/components/Verify';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
-
-  const [verified, setVerified] = useState(false)
-  const router = useRouter()
-
-  const handleVerifySuccess = () => {
-    setVerified(true)
-    router.push('/verify')
-  }
-
-  if (verified) {
-    return null  // Redirect handled in layout or use effect
-  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +41,6 @@ export default function HomePage() {
           Create and participate in completely anonymous surveys while earning crypto rewards.
           Your privacy is protected by zero-knowledge proofs.
         </p>
-
-          <Verify onSuccess={handleVerifySuccess} />
 
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="max-w-md mx-auto mb-8 relative z-10">

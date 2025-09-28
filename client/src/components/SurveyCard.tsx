@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Survey } from '@/types';
-import { Clock, Users, Coins, ArrowRight } from 'lucide-react';
+import { Clock, Users, Coins, ArrowRight, ExternalLink } from 'lucide-react';
 import Modal from './Modal';
 import AnimatedButton from './AnimatedButton';
 
@@ -12,6 +13,7 @@ interface SurveyCardProps {
 }
 
 export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [questionId: string]: any }>({});
@@ -19,9 +21,15 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
   const progressPercentage = (survey.currentResponses / survey.expectedResponses) * 100;
 
   const handleStartSurvey = () => {
-    setIsModalOpen(true);
-    setCurrentQuestionIndex(0);
-    setAnswers({});
+    // If survey has CID, navigate to dedicated survey page
+    if (survey.cid) {
+      router.push(`/survey/${survey.cid}`);
+    } else {
+      // Fallback to modal for surveys without CID (legacy support)
+      setIsModalOpen(true);
+      setCurrentQuestionIndex(0);
+      setAnswers({});
+    }
   };
 
   const handleAnswerChange = (questionId: string, value: any) => {
@@ -167,15 +175,26 @@ export default function SurveyCard({ survey, onComplete }: SurveyCardProps) {
           <div className="text-sm text-neutral-500">
             Created by {survey.creator}
           </div>
-          <AnimatedButton
-            onClick={handleStartSurvey}
-            className="text-sm"
-          >
-            <span className="flex items-center space-x-2">
-              <span>Start Survey</span>
-              <ArrowRight size={14} />
-            </span>
-          </AnimatedButton>
+          <div className="flex gap-2">
+            {survey.cid && (
+              <button
+                onClick={() => router.push(`/survey/${survey.cid}`)}
+                className="px-3 py-2 bg-neutral-700 text-neutral-300 rounded-lg hover:bg-neutral-600 hover:text-white transition-colors text-sm flex items-center space-x-1"
+              >
+                <ExternalLink size={14} />
+                <span>View</span>
+              </button>
+            )}
+            <AnimatedButton
+              onClick={handleStartSurvey}
+              className="text-sm"
+            >
+              <span className="flex items-center space-x-2">
+                <span>{survey.cid ? 'Take Survey' : 'Start Survey'}</span>
+                <ArrowRight size={14} />
+              </span>
+            </AnimatedButton>
+          </div>
         </div>
       </div>
 

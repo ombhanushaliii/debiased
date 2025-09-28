@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { countries, SelfQRcodeWrapper } from '@selfxyz/qrcode'
 import { SelfAppBuilder } from '@selfxyz/qrcode'
 import { ethers } from 'ethers'
+import { useWallet } from './WalletContext'
 
 interface VerifyProps {
   onSuccess: () => void
@@ -11,34 +12,32 @@ interface VerifyProps {
 }
 
 export default function Verify({ onSuccess, userAddress: propUserAddress }: VerifyProps) {
+  const { account, isConnected, connectWallet } = useWallet()
   const [selfApp, setSelfApp] = useState<any | null>(null)
-  const [userAddress, setUserAddress] = useState<string | null>(propUserAddress || null)
+  const [userAddress, setUserAddress] = useState<string | null>(propUserAddress || account || null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const initSelfApp = async () => {
       try {
-        // Auto-connect wallet if not provided
-        if (!userAddress) {
-          if (typeof window !== 'undefined' && (window as any).ethereum) {
-            const provider = new ethers.BrowserProvider((window as any).ethereum)
-            const signer = await provider.getSigner()
-            const addr = await signer.getAddress()
-            setUserAddress(addr)
-          } else {
-            setError('Please connect your wallet (MetaMask) to Celo Sepolia.')
+        // Use wallet context address or prompt to connect
+        const activeAddress = propUserAddress || account
+        if (!activeAddress) {
+          if (!isConnected) {
+            setError('Please connect your wallet first.')
             setLoading(false)
             return
           }
         }
 
-        if (!userAddress) return
-
-        const userId = userAddress
-
+        const finalAddress = activeAddress || account
+        if (!finalAddress) return
         
-        const userDataHex = ethers.getBytes(ethers.toBeHex(userAddress, 32))
+        setUserAddress(finalAddress)
+
+        const userId = finalAddress
+        const userDataHex = ethers.getBytes(ethers.toBeHex(finalAddress, 32))
 
         const app = new SelfAppBuilder({
           version: 2,
@@ -69,7 +68,7 @@ export default function Verify({ onSuccess, userAddress: propUserAddress }: Veri
     }
 
     initSelfApp()
-  }, [userAddress])
+  }, [account, isConnected, propUserAddress])
 
   const handleSuccessfulVerification = async () => {
     // Optional: Poll contract for verification status or listen to events
@@ -86,8 +85,16 @@ export default function Verify({ onSuccess, userAddress: propUserAddress }: Veri
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex flex-col justify-center items-center h-64 space-y-4">
         <p className="text-red-500">{error}</p>
+        {!isConnected && (
+          <button
+            onClick={connectWallet}
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Connect Wallet
+          </button>
+        )}
       </div>
     )
   }
