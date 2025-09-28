@@ -239,7 +239,7 @@ export default function CommunityPage() {
           <div>
             <h3 className="text-2xl font-bold text-ink-800 mb-2">Congratulations!</h3>
             <p className="text-ink-600 mb-4">
-              You've successfully completed the survey and earned:
+              You&apos;ve successfully completed the survey and earned:
             </p>
             <div className="text-3xl font-bold text-green-600 mb-4">
               {rewardAmount} ETH

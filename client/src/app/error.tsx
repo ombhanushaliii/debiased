@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
 
 interface ErrorPageProps {
@@ -20,7 +21,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
           <h1 className="text-2xl font-bold text-ink-800 mb-4">Oops! Something went wrong</h1>
           <p className="text-ink-600 mb-8 leading-relaxed">
-            We encountered an unexpected error while loading this page. This has been logged and we'll look into it.
+            We encountered an unexpected error while loading this page. This has been logged and we&apos;ll look into it.
           </p>
 
           <div className="space-y-3">
@@ -32,13 +33,13 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
               <span>Try Again</span>
             </button>
 
-            <a
+            <Link
               href="/"
               className="paper-button w-full flex items-center justify-center space-x-2"
             >
               <Home size={16} />
               <span>Go to Homepage</span>
-            </a>
+            </Link>
 
             <button
               onClick={() => window.history.back()}

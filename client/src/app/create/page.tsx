@@ -548,7 +548,7 @@ export default function CreateSurveyPage() {
         >
           <div className="space-y-4">
             <p className="text-neutral-300">
-              Are you ready to publish this survey? Once published, it will be available to the community and you won't be able to make major changes.
+              Are you ready to publish this survey? Once published, it will be available to the community and you won&apos;t be able to make major changes.
             </p>
 
             <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 space-y-2 text-sm">
