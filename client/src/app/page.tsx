@@ -31,14 +31,14 @@ export default function HomePage() {
         
       <div className="max-w-2xl mx-auto p-4 relative z-10">
         <h1 className="relative z-10 text-lg md:text-7xl text-center font-sans font-bold mb-8 leading-tight">
-          <span className="text-white">Anonymous Surveys with</span>
+          <span className="text-white">Unbiased Surveys with</span>
           <span className="block mt-4 bg-gradient-to-r from-purple-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent leading-normal">
             ZKP Technology
           </span>
         </h1>
         
         <p className="text-white max-w-lg mx-auto text-lg text-center relative z-10 mb-8">
-          Create and participate in completely anonymous surveys while earning crypto rewards.
+          Create and participate in completely unbiased surveys while earning crypto rewards.
           Your privacy is protected by zero-knowledge proofs.
         </p>
 

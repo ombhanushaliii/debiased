@@ -5,8 +5,8 @@ import './globals.css';
 import { WalletProvider } from '../components/WalletContext';
 
 export const metadata: Metadata = {
-  title: 'Anonymous Survey Platform',
-  description: 'Create and participate in anonymous surveys with ZKP technology',
+  title: 'DeBiased',
+  description: 'Create and participate in unbiased surveys with ZKP technology',
 };
 
 export default function RootLayout({

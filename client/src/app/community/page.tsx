@@ -246,7 +246,7 @@ export default function CommunityPage() {
                 className="bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 min-w-[140px] focus:outline-none focus:border-purple-500 transition-colors duration-200"
               >
                 <option value="all">All Surveys</option>
-                <option value="high-reward">High Reward (1.0+ KDA)</option>
+                <option value="high-reward">High Reward (0.001+ ETH)</option>
                 <option value="quick">Quick (≤3 questions)</option>
                 <option value="almost-complete">Almost Complete</option>
               </select>
@@ -352,7 +352,7 @@ export default function CommunityPage() {
           <div>
             <h3 className="text-2xl font-bold text-ink-800 mb-2">Congratulations!</h3>
             <p className="text-ink-600 mb-4">
-              You've successfully completed the survey and earned:
+              You&apos;ve successfully completed the survey and earned:
             </p>
             <div className="text-3xl font-bold text-green-600 mb-4">
               {rewardAmount} KDA

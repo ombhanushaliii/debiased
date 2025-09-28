@@ -652,7 +652,7 @@ export default function SurveyViewPage() {
             <div>
               <h3 className="text-2xl font-bold text-white mb-2">Congratulations!</h3>
               <p className="text-neutral-300 mb-4">
-                You've successfully completed the survey and earned:
+                You&apos;ve successfully completed the survey and earned:
               </p>
               <div className="text-3xl font-bold text-green-400 mb-4">
                 {rewardAmount} KDA

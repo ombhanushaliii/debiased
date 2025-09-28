@@ -102,7 +102,7 @@ export default function Verify({ onSuccess, userAddress: propUserAddress }: Veri
   return (
     <div className="flex flex-col items-center p-8">
       <h1 className="text-2xl font-bold mb-4">Verify Your Identity</h1>
-      <p className="mb-4">Scan with Self app to prove you're human (18+, not from excluded countries).</p>
+      <p className="mb-4">Scan with Self app to prove you&apos;re human (18+, not from excluded countries).</p>
       <p className="mb-4 text-sm text-gray-600">User: {userAddress}</p>
       {selfApp ? (
         <SelfQRcodeWrapper
