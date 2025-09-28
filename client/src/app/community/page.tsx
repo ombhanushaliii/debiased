@@ -127,7 +127,7 @@ export default function CommunityPage() {
             <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
               <Coins className="text-white" size={24} />
             </div>
-            <div className="text-2xl font-bold text-white">{totalEarned.toFixed(4)} ETH</div>
+            <div className="text-2xl font-bold text-white">{totalEarned.toFixed(4)} KDA</div>
             <div className="text-neutral-400">Total Earned</div>
           </div>
 
@@ -163,7 +163,7 @@ export default function CommunityPage() {
                 className="bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 min-w-[140px] focus:outline-none focus:border-purple-500 transition-colors duration-200"
               >
                 <option value="all">All Surveys</option>
-                <option value="high-reward">High Reward (0.001+ ETH)</option>
+                <option value="high-reward">High Reward (0.001+ KDA)</option>
                 <option value="quick">Quick (≤3 questions)</option>
                 <option value="almost-complete">Almost Complete</option>
               </select>
@@ -242,7 +242,7 @@ export default function CommunityPage() {
               You&apos;ve successfully completed the survey and earned:
             </p>
             <div className="text-3xl font-bold text-green-600 mb-4">
-              {rewardAmount} ETH
+              {rewardAmount} KDA
             </div>
             <p className="text-sm text-ink-500">
               Reward has been sent to your wallet
