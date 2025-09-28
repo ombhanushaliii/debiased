@@ -38,7 +38,7 @@ export default function CommunityPage() {
     if (filterBy !== 'all') {
       switch (filterBy) {
         case 'high-reward':
-          filtered = filtered.filter(survey => survey.reward >= 0.001);
+          filtered = filtered.filter(survey => survey.reward >= 1.0);
           break;
         case 'quick':
           filtered = filtered.filter(survey => survey.questions.length <= 3);
@@ -114,7 +114,7 @@ export default function CommunityPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 text-center">
             <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
               <BarChart3 className="text-white" size={24} />
@@ -127,7 +127,7 @@ export default function CommunityPage() {
             <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
               <Coins className="text-white" size={24} />
             </div>
-            <div className="text-2xl font-bold text-white">{totalEarned.toFixed(4)} ETH</div>
+            <div className="text-2xl font-bold text-white">{totalEarned.toFixed(2)} KDA</div>
             <div className="text-neutral-400">Total Earned</div>
           </div>
 
@@ -139,6 +139,89 @@ export default function CommunityPage() {
               {surveys.reduce((total, survey) => total + survey.currentResponses, 0)}
             </div>
             <div className="text-neutral-400">Total Responses</div>
+          </div>
+
+          {/* Top Earners Leaderboard */}
+          <div className="bg-gradient-to-br from-yellow-900 to-orange-900 border border-yellow-700 rounded-xl p-6">
+            <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Trophy className="text-white" size={24} />
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-white mb-2">Top Earners</div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between text-yellow-200">
+                  <span>🥇 You</span>
+                  <span>{totalEarned.toFixed(1)} KDA</span>
+                </div>
+                <div className="flex justify-between text-yellow-300">
+                  <span>🥈 Alice</span>
+                  <span>{(totalEarned * 0.8).toFixed(1)} KDA</span>
+                </div>
+                <div className="flex justify-between text-yellow-400">
+                  <span>🥉 Bob</span>
+                  <span>{(totalEarned * 0.6).toFixed(1)} KDA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Remove the old stats grid */}
+        <div className="hidden grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <BarChart3 className="text-white" size={24} />
+            </div>
+            <div className="text-2xl font-bold text-white">{surveys.length}</div>
+            <div className="text-neutral-400">Active Surveys</div>
+          </div>
+
+          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Coins className="text-white" size={24} />
+            </div>
+            <div className="text-2xl font-bold text-white">{totalEarned.toFixed(2)} KDA</div>
+            <div className="text-neutral-400">Total Earned</div>
+          </div>
+
+          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Trophy className="text-white" size={24} />
+            </div>
+            <div className="text-2xl font-bold text-white">
+              {surveys.reduce((total, survey) => total + survey.currentResponses, 0)}
+            </div>
+            <div className="text-neutral-400">Total Responses</div>
+          </div>
+        </div>
+
+        {/* Trending Surveys Banner */}
+        <div className="bg-gradient-to-r from-purple-900 to-blue-900 border border-purple-700 rounded-xl p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">🔥 Trending Now</h2>
+              <p className="text-purple-200">High-reward surveys ending soon</p>
+            </div>
+            <div className="flex space-x-4">
+              {surveys.slice(0, 3).map((survey) => {
+                const progress = (survey.currentResponses / survey.expectedResponses) * 100;
+                return (
+                  <div key={survey.id} className="bg-black/20 rounded-lg p-4 min-w-[200px]">
+                    <h3 className="font-semibold text-white text-sm mb-1">{survey.title.substring(0, 30)}...</h3>
+                    <div className="flex items-center justify-between text-xs text-purple-200 mb-2">
+                      <span>{survey.reward} KDA</span>
+                      <span>{Math.round(progress)}% complete</span>
+                    </div>
+                    <div className="w-full bg-purple-800 rounded-full h-1">
+                      <div 
+                        className="bg-yellow-400 h-1 rounded-full transition-all duration-300"
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -163,7 +246,7 @@ export default function CommunityPage() {
                 className="bg-neutral-900 border border-neutral-700 text-white rounded-lg px-4 py-2 min-w-[140px] focus:outline-none focus:border-purple-500 transition-colors duration-200"
               >
                 <option value="all">All Surveys</option>
-                <option value="high-reward">High Reward (0.001+ ETH)</option>
+                <option value="high-reward">High Reward (1.0+ KDA)</option>
                 <option value="quick">Quick (≤3 questions)</option>
                 <option value="almost-complete">Almost Complete</option>
               </select>
@@ -180,6 +263,36 @@ export default function CommunityPage() {
               </select>
             </div>
           </form>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-1">Quick Actions</h3>
+              <p className="text-sm text-neutral-400">Jump to popular categories</p>
+            </div>
+            <div className="flex space-x-3">
+              <button 
+                onClick={() => setFilterBy('high-reward')}
+                className={`px-4 py-2 rounded-lg text-sm transition-colors ${filterBy === 'high-reward' ? 'bg-purple-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'}`}
+              >
+                💰 High Reward
+              </button>
+              <button 
+                onClick={() => setFilterBy('quick')}
+                className={`px-4 py-2 rounded-lg text-sm transition-colors ${filterBy === 'quick' ? 'bg-green-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'}`}
+              >
+                ⚡ Quick Surveys
+              </button>
+              <button 
+                onClick={() => setFilterBy('almost-complete')}
+                className={`px-4 py-2 rounded-lg text-sm transition-colors ${filterBy === 'almost-complete' ? 'bg-blue-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'}`}
+              >
+                🔥 Almost Done
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Results */}
@@ -242,7 +355,7 @@ export default function CommunityPage() {
               You've successfully completed the survey and earned:
             </p>
             <div className="text-3xl font-bold text-green-600 mb-4">
-              {rewardAmount} ETH
+              {rewardAmount} KDA
             </div>
             <p className="text-sm text-ink-500">
               Reward has been sent to your wallet

@@ -99,7 +99,9 @@ export const mockSurveyPerformance = {
       { date: '2024-01-18', responses: 35 },
       { date: '2024-01-19', responses: 42 },
       { date: '2024-01-20', responses: 38 },
-      { date: '2024-01-21', responses: 29 }
+      { date: '2024-01-21', responses: 29 },
+      { date: '2024-01-22', responses: 45 },
+      { date: '2024-01-23', responses: 52 }
     ]
   },
   '2': {
@@ -114,7 +116,26 @@ export const mockSurveyPerformance = {
       { date: '2024-01-18', responses: 11 },
       { date: '2024-01-19', responses: 18 },
       { date: '2024-01-20', responses: 14 },
-      { date: '2024-01-21', responses: 9 }
+      { date: '2024-01-21', responses: 9 },
+      { date: '2024-01-22', responses: 13 },
+      { date: '2024-01-23', responses: 16 }
+    ]
+  },
+  '3': {
+    views: 2100,
+    startRate: 0.78,
+    completionRate: 0.92,
+    averageTime: 3.8,
+    dailyResponses: [
+      { date: '2024-01-15', responses: 67 },
+      { date: '2024-01-16', responses: 82 },
+      { date: '2024-01-17', responses: 79 },
+      { date: '2024-01-18', responses: 95 },
+      { date: '2024-01-19', responses: 103 },
+      { date: '2024-01-20', responses: 88 },
+      { date: '2024-01-21', responses: 74 },
+      { date: '2024-01-22', responses: 91 },
+      { date: '2024-01-23', responses: 98 }
     ]
   }
 };
