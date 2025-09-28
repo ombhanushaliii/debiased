@@ -51,7 +51,6 @@ export default function Navbar() {
                 </div>
               ) : (
                 <AnimatedButton
-                  id="connect-button"
                   onClick={() => setIsWalletModalOpen(true)}
                   className="text-sm"
                 >
@@ -99,7 +98,6 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <AnimatedButton
-                    id="connect-button"
                     onClick={() => setIsWalletModalOpen(true)}
                     className="w-fit text-sm"
                   >
