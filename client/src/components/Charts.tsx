@@ -61,7 +61,7 @@ export function BarChart({ data, title }: BarChartProps) {
         font: {
           family: 'Inter, system-ui, sans-serif',
           size: 16,
-          weight: 'bold',
+          weight: 'bold' as const,
         },
         color: '#564c43',
       },
@@ -134,7 +134,7 @@ export function DoughnutChart({ data, title }: DoughnutChartProps) {
         font: {
           family: 'Inter, system-ui, sans-serif',
           size: 16,
-          weight: 'bold',
+          weight: 'bold' as const,
         },
         color: '#564c43',
       },
@@ -182,7 +182,7 @@ export function LineChart({ data, title }: LineChartProps) {
         font: {
           family: 'Inter, system-ui, sans-serif',
           size: 16,
-          weight: 'bold',
+          weight: 'bold' as const,
         },
         color: '#564c43',
       },
